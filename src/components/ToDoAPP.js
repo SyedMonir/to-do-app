@@ -59,6 +59,46 @@ const ToDoAPP = () => {
       });
   };
 
+  const handleComplete = (id) => {
+    // console.log(id);
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this todo?'
+    );
+
+    if (isConfirmed) {
+      fetch(`http://localhost:5000/todo/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({ completed: true }),
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result);
+          refetch();
+        });
+    }
+  };
+
+  const handleDelete = (id) => {
+    // console.log(id);
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this todo?'
+    );
+
+    if (isConfirmed) {
+      fetch(`http://localhost:5000/todo/${id}`, {
+        method: 'DELETE',
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          // console.log(result);
+          refetch();
+        });
+    }
+  };
+
   return (
     <>
       <div className="text-center my-8">
@@ -87,11 +127,11 @@ const ToDoAPP = () => {
                   {todos?.map((td, index) => (
                     <tr key={td._id}>
                       <th>{index + 1}</th>
-                      <td className={td?.complete ? 'line-through' : ''}>
+                      <td className={td?.completed ? 'line-through' : ''}>
                         {td?.name}
                       </td>
                       <td
-                        className={td?.complete ? 'line-through' : ''}
+                        className={td?.completed ? 'line-through' : ''}
                         title={td?.description}
                       >
                         {td?.description?.length > 50 ? (
@@ -101,12 +141,20 @@ const ToDoAPP = () => {
                         )}
                       </td>
                       <td>
-                        <button className="btn btn-xs btn-secondary">
+                        <button
+                          onClick={() => handleComplete(td._id)}
+                          className="btn btn-xs btn-secondary"
+                        >
                           Confirm
                         </button>
                       </td>
                       <td>
-                        <button className="btn btn-xs btn-error">Delete</button>
+                        <button
+                          onClick={() => handleDelete(td._id)}
+                          className="btn btn-xs btn-error"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
