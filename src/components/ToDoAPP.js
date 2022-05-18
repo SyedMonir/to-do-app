@@ -20,7 +20,9 @@ const ToDoAPP = () => {
     data: todos,
     refetch,
   } = useQuery('todo', () =>
-    fetch('http://localhost:5000/todo').then((res) => res.json())
+    fetch('https://to-do-for-yourself.herokuapp.com/todo').then((res) =>
+      res.json()
+    )
   );
 
   if (isLoading) {
@@ -45,7 +47,7 @@ const ToDoAPP = () => {
       completed: false,
     };
 
-    fetch('http://localhost:5000/todo', {
+    fetch('https://to-do-for-yourself.herokuapp.com/todo', {
       method: 'POST',
       body: JSON.stringify(todo),
       headers: {
@@ -72,7 +74,7 @@ const ToDoAPP = () => {
       confirmButtonText: 'Complete!',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/todo/${id}`, {
+        fetch(`https://to-do-for-yourself.herokuapp.com/todo/${id}`, {
           method: 'PUT',
           headers: {
             'Content-type': 'application/json',
@@ -101,7 +103,7 @@ const ToDoAPP = () => {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/todo/${id}`, {
+        fetch(`https://to-do-for-yourself.herokuapp.com/todo/${id}`, {
           method: 'DELETE',
         })
           .then((res) => res.json())
