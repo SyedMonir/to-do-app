@@ -190,7 +190,7 @@ const ToDoAPP = () => {
               </table>
             </div>
           </div>
-          <div className="lg:w-1/4 md:w-1/2 bg-gray-100 rounded-lg p-4 flex flex-col md:ml-auto w-full mt-10 md:mt-0 h-full lg:mt-12 ">
+          <div className="lg:w-1/4 md:w-1/2 bg-gray-100 rounded-lg p-4 flex flex-col md:ml-auto w-full mt-10 md:mt-0 h-full lg:mt-[70px] ">
             <h2 className="text-gray-900 text-lg text-center font-medium title-font mb-3">
               Add Your Task
             </h2>

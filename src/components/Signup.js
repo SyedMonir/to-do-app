@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  useCreateUserWithEmailAndPassword,
-  useSignInWithGoogle,
-} from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -25,17 +22,13 @@ const Signup = () => {
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
-  // Google
-  const [signInWithGoogle, googleUser, googleLoading, googleError] =
-    useSignInWithGoogle(auth);
-
   // Submit
   const onSubmit = (data) => {
     // console.log(data);
     createUserWithEmailAndPassword(data.email, data.password);
   };
 
-  if (user || googleUser) {
+  if (user) {
     toast.success('User Created');
   }
 
@@ -45,30 +38,26 @@ const Signup = () => {
     const customError = error?.message.split('Error');
     toast.error(customError[1] || error.message);
   }
-  if (googleError) {
-    console.log(googleError);
-    toast.error(googleError);
-  }
 
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
-    if (user || googleUser) {
+    if (user) {
       navigate(from, { replace: true });
     }
-  }, [user, googleUser, navigate, from]);
+  }, [user, navigate, from]);
   return (
     <>
-      <section className="h-screen bg-gray-200  ">
+      <section className="h-screen bg-slate-700 ">
         <div className="container py-12 px-6 h-full mx-auto">
           <div className="flex justify-center items-center flex-wrap h-full  text-gray-800">
-            <div className="xl:w-10/12">
+            <div className="xl:w-9/12">
               <div className="block bg-white shadow-lg rounded-lg">
                 <div className="lg:flex lg:flex-wrap g-0">
                   <div className="lg:w-6/12 mx-auto px-4 md:px-0 h-full">
                     <div className="p-12 md:mx-6 pb-4">
-                      {loading || googleLoading ? (
+                      {loading ? (
                         <>
                           <div className="absolute top-2/4 left-[45%] z-50">
                             <PacmanLoader color={'black'} size={25} />
@@ -136,20 +125,6 @@ const Signup = () => {
                           </div>
                         </form>
                       )}
-                      {/* Social login */}
-                      <div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
-                        <p className="text-center font-semibold mx-4 mb-0">
-                          OR
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => signInWithGoogle()}
-                        className="px-7 py-3 text-black font-medium text-sm leading-snug uppercase rounded w-full flex justify-center items-center mb-3 shadow-2xl"
-                      >
-                        {/* <!-- Google --> */}
-                        Continue with Google
-                      </button>
                     </div>
                   </div>
                 </div>

@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  useSignInWithEmailAndPassword,
-  useSignInWithGoogle,
-} from 'react-firebase-hooks/auth';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PacmanLoader } from 'react-spinners';
@@ -24,10 +21,6 @@ const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
-  // Google
-  const [signInWithGoogle, googleUser, googleLoading, googleError] =
-    useSignInWithGoogle(auth);
-
   // Submit
   const onSubmit = (data) => {
     // console.log(data);
@@ -40,14 +33,9 @@ const Login = () => {
     const customError = error?.message.split('Error');
     toast.error(customError[1] || error?.message);
   }
-  if (googleError) {
-    // console.log(googleError);
-    const customError = googleError?.message.split('Error');
-    toast.error(customError[1] || googleError?.message);
-  }
 
   // User
-  if (user?.user?.uid || googleUser?.user?.uid) {
+  if (user?.user?.uid) {
     // console.log(user?.user);
     toast.success('User Logged in Successfully');
   }
@@ -55,19 +43,19 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
   useEffect(() => {
-    if (user || googleUser) {
+    if (user) {
       navigate(from, { replace: true });
     }
-  }, [user, googleUser, from, navigate]);
+  }, [user, from, navigate]);
 
   return (
-    <section className="h-screen bg-slate-700-200 ">
+    <section className="h-screen bg-slate-700 ">
       <div className="container py-12 px-6 h-full mx-auto">
         <div className="flex justify-center items-center flex-wrap h-full text-gray-800 ">
-          <div className="block bg-white shadow-lg rounded-lg p-12">
+          <div className="xl:w-9/12 block bg-white shadow-lg rounded-lg p-12">
             <div className=" px-4 mx-auto">
               <div className=" md:mx-6">
-                {loading || googleLoading ? (
+                {loading ? (
                   <>
                     <div className="absolute top-2/4 left-[45%] z-50">
                       <PacmanLoader color={'black'} size={25} />
@@ -127,18 +115,9 @@ const Login = () => {
                   </form>
                 )}
 
-                {/* Social login */}
-                <div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
-                  <p className="text-center font-semibold mx-4 mb-0">OR</p>
+                <div className="bg-accent text-white text-center p-1">
+                  rambling.ctg@gmail.com <br /> pass: 123456
                 </div>
-
-                <button
-                  onClick={() => signInWithGoogle()}
-                  className="px-7 py-3 text-black font-medium text-sm leading-snug uppercase rounded w-full flex justify-center items-center mb-3 shadow-xl"
-                >
-                  {/* <!-- Google --> */}
-                  Continue with Google
-                </button>
               </div>
             </div>
           </div>
