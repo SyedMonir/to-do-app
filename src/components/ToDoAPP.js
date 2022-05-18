@@ -1,8 +1,10 @@
+import { signOut } from 'firebase/auth';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
 import { PacmanLoader } from 'react-spinners';
 import Swal from 'sweetalert2';
+import auth from '../firebase.init';
 
 const ToDoAPP = () => {
   // React hook form
@@ -111,15 +113,21 @@ const ToDoAPP = () => {
             // console.log(result);
             refetch();
           });
-        Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+        Swal.fire('Deleted!', 'Your task has been deleted.', 'success');
       }
     });
   };
 
   return (
     <>
-      <div className="text-center my-8">
+      <div className="text-center my-8 flex justify-center items-center">
         <h1 className="text-5xl font-bold">To Do App</h1>
+        <small
+          onClick={() => signOut(auth)}
+          className="pt-8 ml-4 cursor-pointer"
+        >
+          Sign-out
+        </small>
       </div>
 
       <section className="body-font bg-slate-900">
