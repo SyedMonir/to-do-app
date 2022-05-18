@@ -1,42 +1,175 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import { useQuery } from 'react-query';
+import { PacmanLoader } from 'react-spinners';
 
 const ToDoAPP = () => {
+  // React hook form
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm();
+
+  // Query
+  const {
+    isLoading,
+    error,
+    data: todos,
+    refetch,
+  } = useQuery('todo', () =>
+    fetch('http://localhost:5000/todo').then((res) => res.json())
+  );
+
+  if (isLoading) {
+    return (
+      <>
+        <div className="absolute top-2/4 left-[45%] z-50">
+          <PacmanLoader color={'black'} size={25} />
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    console.log('An error has occurred: ' + error?.message);
+  }
+
+  const onSubmit = (data) => {
+    // console.log(data);
+    const todo = {
+      name: data.name,
+      description: data.description,
+      completed: false,
+    };
+
+    fetch('http://localhost:5000/todo', {
+      method: 'POST',
+      body: JSON.stringify(todo),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        // console.log(result);
+        refetch();
+        reset();
+      });
+  };
+
   return (
     <>
       <div className="text-center my-8">
         <h1 className="text-5xl font-bold">To Do App</h1>
       </div>
-      <div className="hero min-h-[80vh] bg-slate-700">
-        <div className="hero-content flex-col-reverse lg:flex-row-reverse">
-          <div className="text-center lg:text-left">
-            <h1 className="text-5xl font-bold">Your Task</h1>
+
+      <section className="body-font bg-slate-900">
+        <div className="container px-5 py-12 mx-auto flex flex-wrap ">
+          <div className="lg:w-2/3 md:w-1/2 w-full md:pr-16 lg:pr-0 pr-0">
+            <h1 className="title-font font-medium text-center my-4 text-3xl">
+              Your {new Date().getDate()}/{new Date().getMonth()}/
+              {new Date().getFullYear()} To Do List
+            </h1>
+            <div className="overflow-x-auto">
+              <table className="table table-zebra w-full text-center">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Task</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {todos?.map((td, index) => (
+                    <tr key={td._id}>
+                      <th>{index + 1}</th>
+                      <td className={td?.complete ? 'line-through' : ''}>
+                        {td?.name}
+                      </td>
+                      <td
+                        className={td?.complete ? 'line-through' : ''}
+                        title={td?.description}
+                      >
+                        {td?.description?.length > 50 ? (
+                          <span>{td?.description.slice(0, 50)} ..</span>
+                        ) : (
+                          td?.description
+                        )}
+                      </td>
+                      <td>
+                        <button className="btn btn-xs btn-secondary">
+                          Confirm
+                        </button>
+                      </td>
+                      <td>
+                        <button className="btn btn-xs btn-error">Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div className="card flex-shrink-0 w-full  max-w-sm shadow-2xl bg-base-100">
-            <h3 className="text-xl text-center font-bold pt-4">
+          <div className="lg:w-1/4 md:w-1/2 bg-gray-100 rounded-lg p-4 flex flex-col md:ml-auto w-full mt-10 md:mt-0 h-full lg:mt-12 ">
+            <h2 className="text-gray-900 text-lg text-center font-medium title-font mb-3">
               Add Your Task
-            </h3>
-            <div className="card-body">
-              <div className="form-control">
-                <input
-                  type="text"
-                  placeholder="Task Name"
-                  className="input input-bordered"
-                />
-              </div>
-              <div className="form-control">
-                <textarea
-                  className="textarea textarea-bordered "
-                  name="description"
-                  placeholder="Task Description"
-                />
-              </div>
-              <div className="form-control mt-6">
-                <button className="btn btn-primary">Add Task</button>
-              </div>
+            </h2>
+            <div className="card-body p-4">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="form-control">
+                  <input
+                    type="text"
+                    placeholder="Task Name"
+                    className="input input-bordered"
+                    {...register('name', {
+                      required: {
+                        value: true,
+                        message: 'name is required',
+                      },
+                    })}
+                  />
+                  <label className="label">
+                    {errors.name?.type === 'required' && (
+                      <span className="label-text-alt text-red-600">
+                        {errors.name?.message}
+                      </span>
+                    )}
+                  </label>
+                </div>
+                <div className="form-control">
+                  <textarea
+                    className="textarea textarea-bordered "
+                    name="description"
+                    placeholder="Task Description"
+                    {...register('description', {
+                      required: {
+                        value: true,
+                        message: 'Description is required',
+                      },
+                    })}
+                  />
+                  <label className="label">
+                    {errors.description?.type === 'required' && (
+                      <span className="label-text-alt text-red-600">
+                        {errors.description?.message}
+                      </span>
+                    )}
+                  </label>
+                </div>
+                <div className="form-control mt-6">
+                  <button type="submit" className="btn btn-primary">
+                    Add Task
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 };

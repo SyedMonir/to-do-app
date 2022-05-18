@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Sleep",
+    "description": "I will sleep for 4 hours at a time, but only if I'm not fighting or paralyzed.",
+    "complete": false
+  },
+  {
+    "name": "Walk",
+    "description": "I will move at normal speed.",
+    "complete": false
+  },
+  {
+    "name": "Code",
+    "description": "I will use my Intelligence modifier to add +1 to any skill check I make to code.",
+    "complete": true
+  },
+  {
+    "name": "Eat",
+    "description": "I will eat at normal speed.",
+    "complete": false
+  },
+  {
+    "name": "Prayer",
+    "description": "I will pray at 5 times a dat.",
+    "complete": false
+  }
+]
