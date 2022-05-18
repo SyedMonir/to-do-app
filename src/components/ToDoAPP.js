@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
 import { PacmanLoader } from 'react-spinners';
+import Swal from 'sweetalert2';
 
 const ToDoAPP = () => {
   // React hook form
@@ -61,42 +62,56 @@ const ToDoAPP = () => {
 
   const handleComplete = (id) => {
     // console.log(id);
-    const isConfirmed = window.confirm(
-      'Are you sure you want to delete this todo?'
-    );
 
-    if (isConfirmed) {
-      fetch(`http://localhost:5000/todo/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({ completed: true }),
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          console.log(result);
-          refetch();
-        });
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Complete!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:5000/todo/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({ completed: true }),
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            console.log(result);
+            refetch();
+          });
+        Swal.fire('Completed!', 'Successfully completed your task!', 'success');
+      }
+    });
   };
 
   const handleDelete = (id) => {
     // console.log(id);
-    const isConfirmed = window.confirm(
-      'Are you sure you want to delete this todo?'
-    );
-
-    if (isConfirmed) {
-      fetch(`http://localhost:5000/todo/${id}`, {
-        method: 'DELETE',
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          // console.log(result);
-          refetch();
-        });
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:5000/todo/${id}`, {
+          method: 'DELETE',
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            // console.log(result);
+            refetch();
+          });
+        Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+      }
+    });
   };
 
   return (
@@ -126,7 +141,9 @@ const ToDoAPP = () => {
                 <tbody>
                   {todos?.map((td, index) => (
                     <tr key={td._id}>
-                      <th>{index + 1}</th>
+                      <th className={td?.completed ? 'line-through' : ''}>
+                        {index + 1}
+                      </th>
                       <td className={td?.completed ? 'line-through' : ''}>
                         {td?.name}
                       </td>
@@ -142,6 +159,7 @@ const ToDoAPP = () => {
                       </td>
                       <td>
                         <button
+                          disabled={td?.completed}
                           onClick={() => handleComplete(td._id)}
                           className="btn btn-xs btn-secondary"
                         >
