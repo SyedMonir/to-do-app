@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Hero from './components/Hero';
+import Login from './components/Login';
 import RequireAuth from './components/RequireAuth';
 import Signup from './components/Signup';
 import ToDoAPP from './components/ToDoAPP';
@@ -18,6 +19,7 @@ function App() {
           }
         />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </>
   );

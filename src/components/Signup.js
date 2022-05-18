@@ -60,7 +60,7 @@ const Signup = () => {
   }, [user, googleUser, navigate, from]);
   return (
     <>
-      <section className="h-screen gradient-form bg-gray-200  ">
+      <section className="h-screen bg-gray-200  ">
         <div className="container py-12 px-6 h-full mx-auto">
           <div className="flex justify-center items-center flex-wrap h-full g-6 text-gray-800">
             <div className="xl:w-10/12">
@@ -146,8 +146,6 @@ const Signup = () => {
                       <button
                         onClick={() => signInWithGoogle()}
                         className="px-7 py-3 text-black font-medium text-sm leading-snug uppercase rounded w-full flex justify-center items-center mb-3 shadow-2xl"
-                        data-mdb-ripple="true"
-                        data-mdb-ripple-color="light"
                       >
                         {/* <!-- Google --> */}
                         Continue with Google
